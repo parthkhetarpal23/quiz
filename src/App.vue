@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-   <Header />
+   
+   <Header 
+    :numCorrect= "numCorrect"
+    :numTotal= "numTotal"/>
 
    <b-container class="bv-example-row">
       <b-row>
@@ -9,7 +11,8 @@
             <QuestionBox
             v-if="questions.length" 
             :currentQuestion= "questions[index]" 
-            :next = "next" />
+            :next = "next"
+            :increment= "increment" />
           </b-col>
       </b-row>
     </b-container>
@@ -29,15 +32,25 @@ export default {
   data() {
     return {
       questions: [],
-      index:0
+      index: 0,
+      numCorrect: 0,
+      numTotal: 0
     }
 
   },
   methods: {
       next: function(){
         this.index++;
+        this.numTotal++;
+        
+      },
+      increment: function(isCorrect, answered){
+        if(isCorrect && answered){
+          this.numCorrect++
+        }
+        
       }
-  },
+  } ,
   mounted: function(){
     fetch('https://opentdb.com/api.php?amount=10&type=multiple',{
       method: 'get'
